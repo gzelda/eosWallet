@@ -1,0 +1,15 @@
+tygavingavin
+
+owner key
+
+Private key: 5JYguJ1wVQNXeC544WtNv9tb3F1e7uhLyCYiXx5k4K6GYsGymhb
+Public key: EOS7yUz3kQujha2E7TEayUgXbVkKLoUEEqbCERd9ykeCUp6ReTje4
+
+active key
+
+Private key: 5JjEmJ5aT4kXvJATdc7jvh2TD8VijVeCxMik72EVdAeYWMawdgq
+Public key: EOS6Sg39WPwVb2fWAS6ErPRKJzwHy97f9GD2BAREdXQ8rRKgHBAjt
+
+
+// 5HvJKiTh47yNbPHrtc7AqZk27jZpeM2TNmRvgnGRrNgnELJNvnm eostesttest1的私钥
+// EOS8K3QgUHshaTBFS6xGoKEgLzj39CYXHMV2oxaRZMnn7qwr7uWWA eostesttest1的公钥
