@@ -3,6 +3,7 @@ var eosApi = require('eosjs-api');
 var router = express.Router();
 
 
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
 	options = {
@@ -34,6 +35,8 @@ router.get('/', function(req, res, next) {
 	cpu_limit：CPU总量、可用CPU和已用CPU的总量，单位us。
 	ram_usage：帐户使用的RAM量，单位字节。
 	*/
+
+
 });
 
 module.exports = router;
