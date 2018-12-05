@@ -4,7 +4,7 @@ var router = express.Router();
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/getAccount', function(req, res, next) {
 	options = {
 	  httpEndpoint: 'http://jungle2.cryptolions.io:80', // default, null for cold-storage
 	  verbose: false, // API logging
@@ -13,13 +13,13 @@ router.get('/', function(req, res, next) {
 	    error: console.error
 	  },
 	  fetchConfiguration: {}
-	}
+	};
 	/**
 	 Other httpEndpoint's: https://www.eosdocs.io/resources/apiendpoints
 	 */
 	var eos = eosApi(options);
-	eos.getAccount("eostesttest1",(error, result) => 
-		{ 
+	eos.getAccount("eostesttest1",(error, result) =>
+		{
 			if(!error) {
 				console.log(result);
 		  		res.send(result);
@@ -36,4 +36,6 @@ router.get('/', function(req, res, next) {
 	*/
 });
 
-module.exports = router;
+module.exports = function () {
+    return router;
+};
