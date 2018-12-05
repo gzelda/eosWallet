@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var Eos = require('eosjs');
 
+
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
 	chain = {
