@@ -3,6 +3,33 @@ var router = express.Router();
 var Eos = require('eosjs');
 var ecc = require('eosjs-ecc')
 /* GET home page. */
+
+var mysql  = require('mysql');
+//创建连接
+var connection = mysql.createConnection({
+host     : 'localhost',
+user     : 'root',
+password : 'password',
+database : 'superwallet'
+});
+
+var sql = 'SELECT * FROM PriKeyWarehouse';
+var  addSql = 'INSERT INTO PriKeyWarehouse(UID,keyType,priKey) VALUES(?,?,?)';
+var addSqlParams = ['8918641428290', 1, '5JjEmJ5aT4kXvJATdc7jvh2TD8VijVeCxMik72EVdAeYWMawdgq'];
+connection.query(sql,(err,result)=>{
+    if (!err)
+        console.log(result);
+    else
+        console.log(err.message);
+})
+
+connection.query(addSql, addSqlParams, (err,result)=>{
+    if (!err)
+        console.log(result);
+    else
+        console.log(err.message);
+})
+
 router.get('/', function(req, res, next) {
 	
 	chain = {
