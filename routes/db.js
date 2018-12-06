@@ -1,113 +1,130 @@
 var mysql  = require('mysql');
 
-var connection = mysql.createConnection({
-host     : 'localhost',
-user     : 'root',
-password : 'root',
-database : 'superWallet'
+
+var pool = mysql.createPool({
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    database: 'superWallet'
 });
 
-// 查找
-function select() {
-    connection.connect(function (err) {
-        if (err) {
-            console.error('error connecting:' + err.stack)
-        }
-        console.log('connected as id ' + connection.threadId);
-    })
 
-    connection.query('SELECT * FROM demo', function (error, results, fields) {
-        if (error) throw error;
-        console.log('The solution is:', results);
+function SQLquery(sql,param,callback){
+    pool.getConnection(function(err,conn){
+        if(err){
+            console.log("SQLerr")
+            callback("error");
+        }else{
+            console.log("SQLsuccess")
+            conn.query(sql,param,function(qerr,vals,fields){
+                //释放连接
+                conn.release();
+                //事件驱动回调
+                //console.log(qerr,vals,fields)
+                callback(vals);
+            });
+        }
     });
-    connection.end();
+    /*
+    connection.query(sql, param, function (error, results, fields) {
+        if (error) {
+            console.log("error");
+            callback("error");
+        }
+        else{
+            console.log('sql:' + results);
+            callback(results);
+        }
+        
+    });
+    */
 }
 
-//添加
-function add() {
-    let post = {
-        id: 1,
-        name: 'Hello MySql',
-        age: 20,
-        time: Date.now(),
-        temp: 'deom'
-    };
-    let query = connection.query("INSERT INTO demo SET ?", post, function (error, results, fields) {
-        if (error) throw error;
-    })
-    console.log(query.sql); //INSERT INTO posts 'id'=1, 'title'='Hello MySQL'
-}
+//修改
+function updateEOSINFO (UID,accountName,priKey,callback) {
 
-
-//更新EOS表
-function updateEOSINFO(UID,accountName,priKey) {
-
-    connection.connect(function (err) {
-        if (err) {
-            console.error('error connecting:' + err.stack);
-        }
-        console.log('connected as id ' + connection.threadId);
-    });
-
-    var sqlOwnerPriKey = 'UPDATE EOSPriKeyWarehouse set ownerPriKey= ? where UID = ?';
-    var sqlActivePriKey = 'UPDATE EOSPriKeyWarehouse set activePriKey= ? where UID = ?';
-    var sqlAccountName = 'UPDATE EOSTOKEN set EOSAccountName = ? where UID = ?';
-    ///需要插入多次
-
-    connection.query(sqlOwnerPriKey, [priKey, UID], function (error, results, fields) {
-        if (error) throw error;
-        console.log('changed:' + results.changeRows + 'rows');
-    });
-
-    connection.query(sqlActivePriKey, [priKey, UID], function (error, results, fields) {
-        if (error) throw error;
-        console.log('changed:' + results.changeRows + 'rows');
-    });
-
-    connection.query(sqlAccountName, [accountName, UID], function (error, results, fields) {
-        if (error) throw error;
-        console.log('changed:' + results.changeRows + 'rows');
-    });
-    connection.end();
-}
-
-//获取address
-function getEOSAccountName(UID){
-	connection.connect(function (err) {
-        if (err) {
-            console.error('error connecting:' + err.stack);
-        }
-        console.log('connected as id ' + connection.threadId);
-    });
-	var sql = 'SELECT EOSAccountName FROM EOSTOKEN WHERE UID = ?';
-	var address = "";
-	connection.query(sql, [UID], function (error, result) {
-        if (error) throw error;
-        console.log('changed:' + result.changeRows + 'rows');
-        return result;
-    });
     
+    var sqlPriKey = 'UPDATE EOSPriKeyWarehouse set activePriKey= ?  ownerPrikey= ? where UID = ? ;';
+    var sqlAddress = 'UPDATE EOSTOKEN set EOSAccountName = ? where UID = ?';
+
+    var res1 = SQLquery(sqlPriKey,[priKey,priKey, UID],function(data){
+        console.log('data:' + data);
+        if (data!="error"){
+            var res2 = SQLquery(sqlAddress,[accountName, UID],function(data){
+                console.log(data);
+                if (data!="error"){
+                    callback("ok"); 
+                }
+                else
+                    callback("error");
+            });
+        }
+        else{
+            callback("error");  
+        }
+        
+    });
 }
 
+
 //获取address
-function getEOSPri(UID){
-	connection.connect(function (err) {
-        if (err) {
-            console.error('error connecting:' + err.stack);
+function getEOSAccountName (UID,callback){
+    
+    var sql = 'SELECT EOSAccountName FROM EOSTOKEN WHERE UID = ?';
+
+    
+    SQLquery(sql,[UID],function(data){
+        console.log('data:' + data);
+        if (data!= "error"){
+
+            callback(data[0].EOSAccountName);
         }
-        console.log('connected as id ' + connection.threadId);
+    })
+
+    /*
+    connection.query(sql, [UID], function (error, result) {
+        if (error) {
+            console.log(error);
+            throw error;
+        }
+        else{
+            console.log('sql:' + result[0].ETHAddress);
+            //console.log(UID + 'gtygtygty(((((((((('+JSON.stringfy(result))
+            //result;
+            callback(result[0].ETHAddress);
+        }
+        
     });
-	var sql = 'SELECT activePriKey FROM EOSPriKeyWarehouse WHERE UID = ?';
-	connection.query(sql, [UID], function (error, result) {
+
+    connection.end();
+    */
+}
+
+
+//获取address
+function getETHPri(UID,callback){
+
+    var sql = 'SELECT activePriKey FROM EOSPriKeyWarehouse WHERE UID = ?';
+    /*
+    connection.query(sql, [UID], function (error, result) {
         if (error) throw error;
-        console.log('changed:' + result.changeRows + 'rows');
-        return result;
+        console.log('sql:' + result);
+        callback(result[0].priKey);
     });
+    */
+
+    SQLquery(sql,[UID],function(data){
+        console.log('data:' + data);
+        if (data!= "error"){
+
+            callback(data[0].activePriKey);
+        }
+    })
     
 }
 
 module.exports = {
- updateEOSINFO,
  getEOSPri,
- getEOSaddress
+ getEOSAccountName,
+ updateETHINFO
 }

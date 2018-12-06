@@ -1,34 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var Eos = require('eosjs');
-var ecc = require('eosjs-ecc')
+var ecc = require('eosjs-ecc');
+
 /* GET home page. */
 
-var mysql  = require('mysql');
-//创建连接
-var connection = mysql.createConnection({
-host     : 'localhost',
-user     : 'root',
-password : 'root',
-database : 'superwallet'
-});
 
-var sql = 'SELECT * FROM PriKeyWarehouse';
-var  addSql = 'INSERT INTO PriKeyWarehouse(UID,keyType,priKey) VALUES(?,?,?)';
-var addSqlParams = ['8918641428290', 1, '5JjEmJ5aT4kXvJATdc7jvh2TD8VijVeCxMik72EVdAeYWMawdgq'];
-connection.query(sql,(err,result)=>{
-    if (!err)
-        console.log(result);
-    else
-        console.log(err.message);
-})
-
-connection.query(addSql, addSqlParams, (err,result)=>{
-    if (!err)
-        console.log(result);
-    else
-        console.log(err.message);
-})
 
 router.get('/', function(req, res, next) {
 	
@@ -37,6 +14,7 @@ router.get('/', function(req, res, next) {
 	    jungle: 'e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473', // jungle testnet
 	    sys: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f' // local developer
 	};
+
 	let eos = Eos({
         //payer的私钥
 	    keyProvider: '5JjEmJ5aT4kXvJATdc7jvh2TD8VijVeCxMik72EVdAeYWMawdgq',// private key
@@ -48,11 +26,9 @@ router.get('/', function(req, res, next) {
     //动态生成随机用户名
 	var newUserName = "eostesttest1";
 
-    var newKey;
     ecc.randomKey().then(privateKey => {
         //随机私钥
         console.log('Private Key:\t', privateKey) // wif
-        newKey = privateKey;
         //随机公钥
         console.log('Public Key:\t', ecc.privateToPublic(privateKey)) // EOSkey...
 
