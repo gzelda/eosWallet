@@ -1,13 +1,19 @@
 var express = require('express');
 var eosApi = require('eosjs-api');
 var router = express.Router();
-
-
+var bodyParser = require('body-parser');
+var config = require('./utils/config.js');
+var db = require('./utils/db.js');
+var respJson = require('./utils/responseJson.js');
+var utils = require('./utils/utils.js');
 
 /* GET home page. */
-router.get('/getAccount', function(req, res, next) {
-	options = {
-	  httpEndpoint: 'http://jungle2.cryptolions.io:80', // default, null for cold-storage
+router.post('/', function(req, resp, next) {
+
+	var UID = req.body.UID;
+
+	var options = {
+	  httpEndpoint: config.ConfigInfo.p2pServer.jungle, // default, null for cold-storage
 	  verbose: false, // API logging
 	  logger: { // Default logging functions
 	    log: console.log,
@@ -19,6 +25,22 @@ router.get('/getAccount', function(req, res, next) {
 	 Other httpEndpoint's: https://www.eosdocs.io/resources/apiendpoints
 	 */
 	var eos = eosApi(options);
+	db.getEOSAccountName(UID,function(data){
+		var accountName = data;
+		eos.getAccount(accountName,(error, result) =>
+		{
+			if(!error) {
+				//console.log(result);
+		  		resp.send(respJson.generateJson(1,0,result));
+		  		console.log("in1");
+			}
+			else{
+				resp.send(respJson.generateJson(0,0,error));
+			}
+		}
+	);
+	})
+	/*
 	eos.getAccount("eostesttest1",(error, result) =>
 		{
 			if(!error) {
@@ -29,6 +51,7 @@ router.get('/getAccount', function(req, res, next) {
 			}
 		}
 	);
+	*/
 	/*
 	ram_quota：持有的RAM量，单位字节。
 	net_limit：帐户的总额、可用额、已用额，单位字节。
@@ -39,6 +62,4 @@ router.get('/getAccount', function(req, res, next) {
 
 });
 
-module.exports = function () {
-    return router;
-};
+module.exports = router;

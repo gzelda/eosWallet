@@ -44,10 +44,10 @@ function SQLquery(sql,param,callback){
 function updateEOSINFO (UID,accountName,priKey,callback) {
 
     
-    var sqlPriKey = 'UPDATE EOSPriKeyWarehouse set activePriKey= ?  ownerPrikey= ? where UID = ? ;';
+    var sqlPriKey = 'INSERT INTO EOSPriKeyWarehouse(UID,activePriKey,ownerPrikey) values(?,?,?)';
     var sqlAddress = 'UPDATE EOSTOKEN set EOSAccountName = ? where UID = ?';
 
-    var res1 = SQLquery(sqlPriKey,[priKey,priKey, UID],function(data){
+    var res1 = SQLquery(sqlPriKey,[ UID,priKey,priKey],function(data){
         console.log('data:' + data);
         if (data!="error"){
             var res2 = SQLquery(sqlAddress,[accountName, UID],function(data){
@@ -102,7 +102,7 @@ function getEOSAccountName (UID,callback){
 
 
 //获取address
-function getETHPri(UID,callback){
+function getEOSPri(UID,callback){
 
     var sql = 'SELECT activePriKey FROM EOSPriKeyWarehouse WHERE UID = ?';
     /*
@@ -115,9 +115,13 @@ function getETHPri(UID,callback){
 
     SQLquery(sql,[UID],function(data){
         console.log('data:' + data);
-        if (data!= "error"){
+        if (data!= ""){
 
             callback(data[0].activePriKey);
+        }
+        else
+        {
+            callback("error");
         }
     })
     
@@ -126,5 +130,5 @@ function getETHPri(UID,callback){
 module.exports = {
  getEOSPri,
  getEOSAccountName,
- updateETHINFO
+ updateEOSINFO
 }

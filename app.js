@@ -11,6 +11,8 @@ var getAccount = require('./routes/getAccount');
 var createAccount = require('./routes/createAccount');
 var transfer = require('./routes/transfer');
 var delegate = require('./routes/delegate');
+var trxNetCpu = require('./routes/trxNetCpu');
+var trxRam = require('./routes/trxRam');
 
 var app = express();
 console.log("in app.js: initialize");
@@ -26,11 +28,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/getInfo', getInfo);
-app.use('/getAccount', getAccount);
-app.use('/createAccount', createAccount);
-app.use('/transfer', transfer);
-app.use('/delegate', delegate);
+app.use('/eos/getInfo', getInfo);
+app.use('/eos/getAccount', getAccount);
+app.use('/eos/createAccount', createAccount);
+app.use('/eos/transfer', transfer);
+app.use('/eos/delegate', delegate);
+app.use('/eos/trxNetCpu', trxNetCpu);
+app.use('/eos/trxRam', trxRam);
+trxRam
 //获取用户信息
 //转账
 //获取链信息
