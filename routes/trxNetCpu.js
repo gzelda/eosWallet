@@ -57,14 +57,29 @@ router.post('/', function(req, resp, next) {
         	console.log(data);
         	var payerAccount = data;
         	var receiverAccount = data;
-        	utils.stakeNetCpu(eos,payerAccount,receiverAccount,EosNetAmount,EosCpuAmount,function(data){
-        		console.log(data);
-        		if (data!="error"){
-        			resp.send(respJson.generateJson(1,0,data));
-        		}
-        		else
-        			resp.send(respJson.generateJson(0,0,"质押失败"));
-        	})
+        	if (actionType == 0){
+        		utils.stakeNetCpu(eos,payerAccount,receiverAccount,EosNetAmount,EosCpuAmount,function(data){
+	        		console.log(data);
+	        		if (data!="error"){
+	        			resp.send(respJson.generateJson(1,0,data));
+	        		}
+	        		else
+	        			resp.send(respJson.generateJson(0,0,"质押失败"));
+        		})
+        	}
+        	else if (actionType == 1){
+        		utils.unstakeNetCpu(eos,payerAccount,receiverAccount,EosNetAmount,EosCpuAmount,function(data){
+	        		console.log(data);
+	        		if (data!="error"){
+	        			resp.send(respJson.generateJson(1,0,data));
+	        		}
+	        		else
+	        			resp.send(respJson.generateJson(0,0,"赎回失败"));
+        		})
+        	}
+        	else
+        		resp.send(respJson.generateJson(0,0,"actionType错误"));
+        	
         })
         
 

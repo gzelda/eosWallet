@@ -31,14 +31,29 @@ router.post('/', function(req, resp, next) {
         	console.log(data);
         	var payerAccount = data;
         	var receiverAccount = data;
-        	utils.buyRam(eos,payerAccount,receiverAccount,EosRamAmount,function(data){
-        		console.log(data);
-        		if (data!="error"){
-        			resp.send(respJson.generateJson(1,0,data));
-        		}
-        		else
-        			resp.send(respJson.generateJson(0,0,"质押失败"));
-        	})
+        	if (actionType == 0){
+        		utils.buyRam(eos,payerAccount,receiverAccount,EosRamAmount,function(data){
+	        		console.log(data);
+	        		if (data!="error"){
+	        			resp.send(respJson.generateJson(1,0,data));
+	        		}
+	        		else
+	        			resp.send(respJson.generateJson(0,0,"质押失败"));
+	        	})
+        	}
+        	else if (actionType == 1){
+        		utils.sellRam(eos,payerAccount,EosRamAmount,function(data){
+	        		console.log(data);
+	        		if (data!="error"){
+	        			resp.send(respJson.generateJson(1,0,data));
+	        		}
+	        		else
+	        			resp.send(respJson.generateJson(0,0,"质押失败"));
+	        	})
+        	}
+        	else
+        		resp.send(respJson.generateJson(0,0,"actionType错误"));
+        	
         })
         
 
