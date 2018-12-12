@@ -86,6 +86,32 @@ function sellRam(eos,Account,ramAmount,callback){
 }
 
 
+function getAccountExists(eos,accountName,callback){
+	eos.getAccount(accountName,(error, result) =>
+		{
+			if(!error) {
+				console.log(result);
+
+		  		callback("ok")
+			}
+			else{
+				callback("error");
+			}
+		});
+}
+
+function randomString(length){
+	var chars = 'abcdefghijklmnopqrstuvwxyz12345';
+	var maxPos = chars.length;
+	var rs = '';
+	for (i = 0; i < length; i++) {
+		rs += chars.charAt(Math.floor(Math.random() * maxPos));
+	}
+
+	return rs;
+}
+
+
 function JsonCircularStructure(obj){
 	return util.inspect(obj);
 }
@@ -97,5 +123,7 @@ module.exports = {
  unstakeNetCpu,
  JsonCircularStructure,
  buyRam,
- sellRam
+ sellRam,
+ getAccountExists,
+ randomString
 }

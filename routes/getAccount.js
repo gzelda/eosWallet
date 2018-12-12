@@ -15,10 +15,12 @@ router.post('/', function(req, resp, next) {
 	var options = {
 	  httpEndpoint: config.ConfigInfo.p2pServer.jungle, // default, null for cold-storage
 	  verbose: false, // API logging
+	  /*
 	  logger: { // Default logging functions
 	    log: console.log,
 	    error: console.error
 	  },
+	  */
 	  fetchConfiguration: {}
 	};
 	/**
@@ -37,8 +39,7 @@ router.post('/', function(req, resp, next) {
 			else{
 				resp.send(respJson.generateJson(0,0,error));
 			}
-		}
-	);
+		});
 	})
 	/*
 	eos.getAccount("eostesttest1",(error, result) =>

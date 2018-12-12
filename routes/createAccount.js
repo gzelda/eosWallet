@@ -6,11 +6,39 @@ var bodyParser = require('body-parser');
 var config = require('./utils/config.js');
 var db = require('./utils/db.js');
 var respJson = require('./utils/responseJson.js');
+var eosApi = require('eosjs-api');
+var utils = require('./utils/utils.js');
 
 /* GET home page. */
 
-function newAccountName(UID){
-    return "eostesttes11";
+function newAccountName(callback){
+    var options = {
+      httpEndpoint: config.ConfigInfo.p2pServer.jungle, // default, null for cold-storage
+      verbose: false, // API logging
+      fetchConfiguration: {}
+    };
+    /**
+     Other httpEndpoint's: https://www.eosdocs.io/resources/apiendpoints
+     */
+    var eos = eosApi(options);
+    (function iterator(i){
+        var accountName = utils.randomString(12);
+        console.log(accountName);
+        utils.getAccountExists(eos,accountName,function(data){
+            if (data == "ok"){
+                console.log("exists:", data);
+                iterator(i+1);
+            }
+            else
+            {
+                console.log("not exists:",data);
+                callback(accountName);
+                return;
+            }
+        });
+    })(0);
+    
+    
 }
 
 
@@ -28,9 +56,11 @@ router.post('/', function(req, resp, next) {
             chainId: config.ConfigInfo.chain.jungle
         });
         var payer = "tygavingavin";
-        var newUserName = newAccountName(UID);
-
-        ecc.randomKey().then(privateKey => {
+        var newUserName = newAccountName(function(name){
+            console.log(name);
+            var newUserName = name;
+            
+            ecc.randomKey().then(privateKey => {
             //随机私钥
             console.log('Private Key:\t', privateKey) // wif
             //随机公钥
@@ -77,7 +107,11 @@ router.post('/', function(req, resp, next) {
                         console.log("err:"+e);
                         resp.send(respJson.generateJson(0,0,"用户已经存在"));
                     });
-        })
+            })
+            
+        });
+
+        
     })
     /*
 	var eos = Eos({
