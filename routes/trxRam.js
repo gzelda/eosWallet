@@ -23,8 +23,8 @@ router.post('/', function(req, resp, next) {
         var eos = Eos({
         //payer的私钥
             keyProvider: priKey,// private key
-            httpEndpoint: config.ConfigInfo.p2pServer.jungle,
-            chainId: config.ConfigInfo.chain.jungle
+            httpEndpoint: config.chainServer,
+            chainId: config.chainID
         });
 
         db.getEOSAccountName(UID,function(data){
@@ -35,20 +35,20 @@ router.post('/', function(req, resp, next) {
         		utils.buyRam(eos,payerAccount,receiverAccount,EosRamAmount,function(data){
 	        		console.log(data);
 	        		if (data!="error"){
-	        			resp.send(respJson.generateJson(1,0,data));
+	        			resp.send(respJson.generateJson(1,0,"购买成功",data));
 	        		}
 	        		else
-	        			resp.send(respJson.generateJson(0,0,"质押失败"));
+	        			resp.send(respJson.generateJson(0,0,"购买失败"));
 	        	})
         	}
         	else if (actionType == 1){
         		utils.sellRam(eos,payerAccount,EosRamAmount,function(data){
 	        		console.log(data);
 	        		if (data!="error"){
-	        			resp.send(respJson.generateJson(1,0,data));
+	        			resp.send(respJson.generateJson(1,0,"售卖成功",data));
 	        		}
 	        		else
-	        			resp.send(respJson.generateJson(0,0,"质押失败"));
+	        			resp.send(respJson.generateJson(0,0,"售卖失败"));
 	        	})
         	}
         	else

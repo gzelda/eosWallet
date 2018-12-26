@@ -13,7 +13,7 @@ router.post('/', function(req, resp, next) {
 	var UID = req.body.UID;
 
 	var options = {
-	  httpEndpoint: config.ConfigInfo.p2pServer.jungle, // default, null for cold-storage
+	  httpEndpoint: config.chainServer, // default, null for cold-storage
 	  verbose: false, // API logging
 	  /*
 	  logger: { // Default logging functions

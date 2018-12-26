@@ -35,8 +35,8 @@ router.post('/', function(req, resp, next) {
 		var eos = Eos({
         //payer的私钥
             keyProvider: priKey,// private key
-            httpEndpoint: config.ConfigInfo.p2pServer.jungle,
-            chainId: config.ConfigInfo.chain.jungle
+            httpEndpoint: config.chainServer,
+            chainId: config.chainID
         });
 		//console.log(amount.toFixed(4) + " EOS");
 		

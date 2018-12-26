@@ -13,7 +13,7 @@ var utils = require('./utils/utils.js');
 
 function newAccountName(callback){
     var options = {
-      httpEndpoint: config.ConfigInfo.p2pServer.jungle, // default, null for cold-storage
+      httpEndpoint: config.chainServer, // default, null for cold-storage
       verbose: false, // API logging
       fetchConfiguration: {}
     };
@@ -52,10 +52,10 @@ router.post('/', function(req, resp, next) {
         var eos = Eos({
         //payer的私钥
             keyProvider: SuperPriKey,// private key
-            httpEndpoint: config.ConfigInfo.p2pServer.jungle,
-            chainId: config.ConfigInfo.chain.jungle
+            httpEndpoint: config.chainServer,
+            chainId: config.chainID
         });
-        var payer = "tygavingavin";
+        var payer = config.superAccount;
         var newUserName = newAccountName(function(name){
             console.log(name);
             var newUserName = name;

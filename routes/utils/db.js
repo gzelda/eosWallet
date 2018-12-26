@@ -101,7 +101,7 @@ function getEOSAccountName (UID,callback){
 }
 
 
-//获取address
+//获取priKey
 function getEOSPri(UID,callback){
 
     var sql = 'SELECT activePriKey FROM EOSPriKeyWarehouse WHERE UID = ?';

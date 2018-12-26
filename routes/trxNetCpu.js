@@ -49,8 +49,8 @@ router.post('/', function(req, resp, next) {
         var eos = Eos({
         //payer的私钥
             keyProvider: priKey,// private key
-            httpEndpoint: config.ConfigInfo.p2pServer.jungle,
-            chainId: config.ConfigInfo.chain.jungle
+            httpEndpoint: config.chainServer,
+            chainId: config.chainID
         });
 
         db.getEOSAccountName(UID,function(data){
@@ -61,7 +61,7 @@ router.post('/', function(req, resp, next) {
         		utils.stakeNetCpu(eos,payerAccount,receiverAccount,EosNetAmount,EosCpuAmount,function(data){
 	        		console.log(data);
 	        		if (data!="error"){
-	        			resp.send(respJson.generateJson(1,0,data));
+	        			resp.send(respJson.generateJson(1,0,"质押成功",data));
 	        		}
 	        		else
 	        			resp.send(respJson.generateJson(0,0,"质押失败"));
@@ -71,7 +71,7 @@ router.post('/', function(req, resp, next) {
         		utils.unstakeNetCpu(eos,payerAccount,receiverAccount,EosNetAmount,EosCpuAmount,function(data){
 	        		console.log(data);
 	        		if (data!="error"){
-	        			resp.send(respJson.generateJson(1,0,data));
+	        			resp.send(respJson.generateJson(1,0,"赎回失败",data));
 	        		}
 	        		else
 	        			resp.send(respJson.generateJson(0,0,"赎回失败"));
