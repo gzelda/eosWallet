@@ -73,13 +73,13 @@ function queryUID (UID,callback) {
 
 //获取address
 function getEOSAccountName (UID,callback){
-    console.log(UID);
     var sql = 'SELECT accountName FROM EOSPriKeyWarehouse WHERE UID = ?';
     SQLquery(sql,[UID],function(data){
         console.log('data:' + data.length);
-        if (data.length == 0)
-            data = "error"
+        
         if (data!= "error"){
+            if (data.length == 0)
+                callback("error");
             callback(data[0].accountName);
         }
         else{

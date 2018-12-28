@@ -34,11 +34,11 @@ router.post('/', function(req, resp, next) {
 		{
 			if(!error) {
 				//console.log(result);
-		  		resp.send(respJson.generateJson(1,0,result));
+		  		resp.send(respJson.generateJson(1,0,"请求成功",result));
 		  		console.log("in1");
 			}
 			else{
-				resp.send(respJson.generateJson(0,0,error));
+				resp.send(respJson.generateJson(0,0,"请求失败",error));
 			}
 		});
 	});
