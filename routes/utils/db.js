@@ -2,9 +2,9 @@ var mysql  = require('mysql');
 
 
 var pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
+    host: 'nodeinstance.couot2aumoqo.us-east-2.rds.amazonaws.com',
+    user: 'tygavingavin',
+    password: 'tygavinmysql',
     database: 'KeyWarehouse'
 });
 
