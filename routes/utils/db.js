@@ -12,13 +12,14 @@ var pool = mysql.createPool({
 function SQLquery(sql,param,callback){
     pool.getConnection(function(err,conn){
         if(err){
-            console.log("SQLerr")
+            console.log("SQLerr:",err)
             callback("error");
         }else{
             console.log("SQLsuccess")
             conn.query(sql,param,function(qerr,vals,fields){
                 //释放连接
-                conn.release();
+                pool.releaseConnection(conn);
+                //conn.release();
                 //事件驱动回调
                 //console.log(qerr,vals,fields)
                 callback(vals);
