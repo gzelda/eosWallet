@@ -28,19 +28,24 @@ router.post('/', function(req, resp, next) {
 	 */
 	var eos = eosApi(options);
 	db.getEOSAccountName(UID,function(data){
-		var accountName = data;
-		console.log(accountName);
-		eos.getAccount(accountName,(error, result) =>
-		{
-			if(!error) {
-				//console.log(result);
-		  		resp.send(respJson.generateJson(1,0,"请求成功",result));
-		  		console.log("in1");
+		if (data == "error"){
+			resp.send(respJson.generateJson(0,0,"数据库查询失败",error));
+		}
+		else {
+			var accountName = data;
+			console.log(accountName);
+			eos.getAccount(accountName,(error, result) =>
+				{
+					if(!error) {
+						//console.log(result);
+				  		resp.send(respJson.generateJson(1,0,"请求成功",result));
+				  		console.log("in1");
+					}
+					else{
+						resp.send(respJson.generateJson(0,0,"请求失败",error));
+					}
+				});
 			}
-			else{
-				resp.send(respJson.generateJson(0,0,"请求失败",error));
-			}
-		});
 	});
 	/*
 	eos.getAccount("eostesttest1",(error, result) =>
