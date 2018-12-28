@@ -12,7 +12,7 @@ var ecc = require('eosjs-ecc');
 
 function newAccountName(newName,callback){
     var options = {
-      httpEndpoint: config.ConfigInfo.p2pServer.jungle, // default, null for cold-storage
+      httpEndpoint: 'https://api.eosnewyork.io', // default, null for cold-storage
       verbose: false, // API logging
       fetchConfiguration: {}
     };
@@ -41,21 +41,21 @@ function newAccountName(newName,callback){
 }
 
 router.get('/', function(req, resp, next) {
-	
+	/*
 	var options = {
-	  httpEndpoint: config.ConfigInfo.p2pServer.main, // default, null for cold-storage
+	  httpEndpoint: 'https://api.eosnewyork.io', // default, null for cold-storage
 	  verbose: false, // API logging
 	  fetchConfiguration: {}
 	};
 	var SuperPriKey = "data";
 	var eos = Eos({
 	//payer的私钥
-	    keyProvider: SuperPriKey,// private key
-	    httpEndpoint: config.ConfigInfo.p2pServer.main,
-	    chainId: config.ConfigInfo.chain.main
+	    keyProvider: ,// private key
+	    httpEndpoint: 'https://api.eosnewyork.io',
+	    chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
 	});
 	var payer = "zjugtyzjugty";
-	var newUserName = newAccountName("mark11111111",function(name){
+	var newUserName = newAccountName("gtygavintest",function(name){
 	    console.log(name);
 	    var newUserName = name;
 	    
@@ -85,9 +85,9 @@ router.get('/', function(req, resp, next) {
 	        tr.delegatebw({
 	            from: payer,
 	            receiver: newUserName,
-	            stake_net_quantity: '1.0000 EOS',
-	            stake_cpu_quantity: '1.0000 EOS',
-	            transfer: 0
+	            stake_net_quantity: '5.0000 EOS',
+	            stake_cpu_quantity: '5.0000 EOS',
+	            transfer: 10
 	        });
 
 	    }).then(r => {
@@ -102,6 +102,30 @@ router.get('/', function(req, resp, next) {
 	    })
 	    
 	});
+	*/
+	var eos = Eos({
+	//payer的私钥
+	    keyProvider: aaa,// private key
+	    httpEndpoint: 'https://api.eosnewyork.io',
+	    chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
+	});
+	var fromAccount = "zjugtyzjugty";
+	var toAccount = "gtygavintest";
+	var eosAmount = "10.0000 EOS";
+	var memo = "program test";
+		//console.log(amount.toFixed(4) + " EOS");
+	console.log("in");
+        eos.transaction(tr => {
+			tr.transfer(fromAccount,toAccount,eosAmount,memo);
+		}).then(r => {
+				//返回成功结果
+				console.log(r);
+				resp.send(respJson.generateJson(1,0,r));
+			}).catch(e => {
+				//返回失败结果
+				console.log(e);
+				resp.send(respJson.generateJson(0,0,e));
+			});
 	
 });
 

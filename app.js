@@ -6,13 +6,20 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var getInfo = require('./routes/getInfo');
+var getInfo = require('./routes/abandoned/getInfo');
+var delegate = require('./routes/abandoned/delegate');
+
 var getAccount = require('./routes/getAccount');
 var createAccount = require('./routes/createAccount');
 var transfer = require('./routes/transfer');
-var delegate = require('./routes/delegate');
+
 var trxNetCpu = require('./routes/trxNetCpu');
 var trxRam = require('./routes/trxRam');
+
+var getOrRequestIdentity = require('./routes/scatter/getOrRequestIdentity');
+var identityFromPermissions = require('./routes/scatter/identityFromPermissions');
+var requestSignature = require('./routes/scatter/requestSignature');
+var getOriginData = require('./routes/scatter/getOriginData');
 
 var app = express();
 console.log("in app.js: initialize");
@@ -26,16 +33,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/eos/getInfo', getInfo);
+
 app.use('/eos/getAccount', getAccount);
 app.use('/eos/createAccount', createAccount);
 app.use('/eos/transfer', transfer);
-app.use('/eos/delegate', delegate);
 app.use('/eos/trxNetCpu', trxNetCpu);
 app.use('/eos/trxRam', trxRam);
-trxRam
+
+app.use('/eos/scatter/getOrRequestIdentity', getOrRequestIdentity);
+app.use('/eos/scatter/identityFromPermissions', identityFromPermissions);
+app.use('/eos/scatter/requestSignature', requestSignature);
+app.use('/eos/scatter/getOriginData', getOriginData);
+
+app.use('/eos/abd/delegate', delegate);
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use('/eos/abd/getInfo', getInfo);
 //获取用户信息
 //转账
 //获取链信息

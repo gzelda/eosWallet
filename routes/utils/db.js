@@ -5,7 +5,7 @@ var pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: 'superWallet'
+    database: 'KeyWarehouse'
 });
 
 
@@ -41,23 +41,12 @@ function SQLquery(sql,param,callback){
 }
 
 //修改
-function updateEOSINFO (UID,accountName,priKey,callback) {
-
-    
-    var sqlPriKey = 'INSERT INTO EOSPriKeyWarehouse(UID,activePriKey,ownerPrikey) values(?,?,?)';
-    var sqlAddress = 'UPDATE EOSTOKEN set EOSAccountName = ? where UID = ?';
-
-    var res1 = SQLquery(sqlPriKey,[ UID,priKey,priKey],function(data){
+function InsertEOSKey (UID,accountName,priKey,accountName,status,callback) {
+    var sqlPriKey = 'INSERT INTO EOSPriKeyWarehouse(UID,activePriKey,ownerPrikey,accountName,status) values(?,?,?,?,?)';   
+    var res = SQLquery(sqlPriKey,[ UID,priKey,priKey,accountName,status],function(data){
         console.log('data:' + data);
         if (data!="error"){
-            var res2 = SQLquery(sqlAddress,[accountName, UID],function(data){
-                console.log(data);
-                if (data!="error"){
-                    callback("ok"); 
-                }
-                else
-                    callback("error");
-            });
+            callback("ok"); 
         }
         else{
             callback("error");  
@@ -66,21 +55,37 @@ function updateEOSINFO (UID,accountName,priKey,callback) {
     });
 }
 
+//查询UID是否存在
+function queryUID (UID,callback) {
+    var sqlPriKey = 'SELECT * FROM EOSPriKeyWarehouse WHERE UID = ?';
+    var res = SQLquery(sqlPriKey,[UID],function(data){
+        console.log('data:' + JSON.stringify(data));
+        console.log('data:' + data.length);
+        if (data!="error"){
+            callback(data.length);
+        }
+        else{
+            callback("error");  
+        }
+        
+    });
+}
 
 //获取address
 function getEOSAccountName (UID,callback){
-    
-    var sql = 'SELECT EOSAccountName FROM EOSTOKEN WHERE UID = ?';
-
-    
+    console.log(UID);
+    var sql = 'SELECT accountName FROM EOSPriKeyWarehouse WHERE UID = ?';
     SQLquery(sql,[UID],function(data){
-        console.log('data:' + data);
+        console.log('data:' + data.length);
+        if (data.length == 0)
+            data = "error"
         if (data!= "error"){
-
-            callback(data[0].EOSAccountName);
+            callback(data[0].accountName);
         }
+        else{
+            callback("error");
+        }       
     })
-
     /*
     connection.query(sql, [UID], function (error, result) {
         if (error) {
@@ -100,10 +105,8 @@ function getEOSAccountName (UID,callback){
     */
 }
 
-
 //获取priKey
 function getEOSPri(UID,callback){
-
     var sql = 'SELECT activePriKey FROM EOSPriKeyWarehouse WHERE UID = ?';
     /*
     connection.query(sql, [UID], function (error, result) {
@@ -112,7 +115,6 @@ function getEOSPri(UID,callback){
         callback(result[0].priKey);
     });
     */
-
     SQLquery(sql,[UID],function(data){
         console.log('data:' + data);
         if (data!= ""){
@@ -128,7 +130,8 @@ function getEOSPri(UID,callback){
 }
 
 module.exports = {
- getEOSPri,
- getEOSAccountName,
- updateEOSINFO
+     getEOSPri,
+     getEOSAccountName,
+     InsertEOSKey,
+     queryUID
 }

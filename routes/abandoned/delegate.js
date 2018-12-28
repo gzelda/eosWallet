@@ -2,9 +2,9 @@ var express = require('express');
 var router = express.Router();
 var Eos = require('eosjs');
 var bodyParser = require('body-parser');
-var config = require('./utils/config.js');
-var db = require('./utils/db.js');
-var respJson = require('./utils/responseJson.js');
+var config = require('../utils/config.js');
+var db = require('../utils/db.js');
+var respJson = require('../utils/responseJson.js');
 
 
 function buyRam(eos,payerAccount,receiverAccount,ramAmount,callback){
