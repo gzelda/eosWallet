@@ -2,11 +2,16 @@ var mysql  = require('mysql');
 
 
 var pool = mysql.createPool({
+    connectionLimit : 1000,
+    connectTimeout  : 60 * 60 * 1000,
+    aquireTimeout   : 60 * 60 * 1000,
+    timeout         : 60 * 60 * 1000,
     host: 'nodeinstance.couot2aumoqo.us-east-2.rds.amazonaws.com',
     user: 'tygavingavin',
     password: 'tygavinmysql',
     database: 'KeyWarehouse'
 });
+
 
 
 function SQLquery(sql,param,callback){
