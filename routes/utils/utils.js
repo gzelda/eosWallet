@@ -1,5 +1,8 @@
 
 function amountConvert(amount){
+	if (typeof(amount) == "string"){
+		amount = parseFloat(amount);
+	}
 	if (typeof(amount) == "number"){
 		return amount.toFixed(4) + " EOS";
 	}

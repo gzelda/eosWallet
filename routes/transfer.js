@@ -27,32 +27,38 @@ router.post('/', function(req, resp, next) {
 	var tokenType = req.body.type;
 	var memo = req.body.memo;
 
+
 	var eosAmount = utils.amountConvert(amount);
 	console.log(typeof(amount),eosAmount);
-
-	db.getEOSPri(UID,function(data){
-		var priKey = data;
-		var eos = Eos({
-        //payer的私钥
-            keyProvider: priKey,// private key
-            httpEndpoint: config.chainServer,
-            chainId: config.chainID
-        });
-		//console.log(amount.toFixed(4) + " EOS");
-		
-        eos.transaction(tr => {
-			tr.transfer(fromAccount,toAccount,eosAmount,memo);
-		}).then(r => {
-				//返回成功结果
-				console.log(r);
-				resp.send(respJson.generateJson(1,0,r));
-			}).catch(e => {
-				//返回失败结果
-				console.log(e);
-				resp.send(respJson.generateJson(0,0,e));
-			});
-		
-	})
+	if (eosAmount == "error"){
+		resp.send(respJson.generateJson(0,0,"amount格式错误"))
+	}
+	else{
+		db.getEOSPri(UID,function(data){
+			var priKey = data;
+			var eos = Eos({
+	        //payer的私钥
+	            keyProvider: priKey,// private key
+	            httpEndpoint: config.chainServer,
+	            chainId: config.chainID
+	        });
+			//console.log(amount.toFixed(4) + " EOS");
+			
+	        eos.transaction(tr => {
+				tr.transfer(fromAccount,toAccount,eosAmount,memo);
+			}).then(r => {
+					//返回成功结果
+					console.log(r);
+					resp.send(respJson.generateJson(1,0,"请求成功",r));
+				}).catch(e => {
+					//返回失败结果
+					console.log(e);
+					resp.send(respJson.generateJson(0,0,"请求失败",e));
+				});
+			
+		})
+	}
+	
 	/*
 	//http获取
 	var accountFrom = "tygavingavin";

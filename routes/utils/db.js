@@ -27,7 +27,10 @@ function SQLquery(sql,param,callback){
                 //conn.release();
                 //事件驱动回调
                 //console.log(qerr,vals,fields)
-                callback(vals);
+                if (vals == undefined || vals =="")
+                    callback("error");
+                else
+                    callback(vals);
             });
         }
     });
