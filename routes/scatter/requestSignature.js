@@ -11,13 +11,18 @@ var ecc = require('eosjs-ecc');
 /* GET home page. */
 router.post('/', function(req, resp, next) {
 	var UID = req.body.UID;
-	var buf = req.body.buf;
+	var bufstr = req.body.buf;
 	//库表查
 	var name = "gtygavintest";
 	var publicKey = "EOS8ivzcSu6Co6hJXaTfPjGyXUX2jnrK5VKrsQ9DXhKcBPF9TZj8p";
-	var priv = "5Hrj3KDQLMu615gp1XW9uiEczr4wFe7ZBsJmnF6MYe4eq5MwGRH"	
+	var priv = "5Hrj3KDQLMu615gp1XW9uiEczr4wFe7ZBsJmnF6MYe4eq5MwGRH"
+	
+	console.log(bufstr,typeof bufstr);
+	var buf = JSON.parse(bufstr);
+	console.log(buf,typeof(buf));
+	
 	let signature = ecc.sign(Buffer.from(buf, 'utf8'), priv);
-
+	console.log(signature);
 	var result = {
 	        	    "result":{
 	                    "signatures":[signature],
