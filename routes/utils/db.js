@@ -27,10 +27,16 @@ function SQLquery(sql,param,callback){
                 //conn.release();
                 //事件驱动回调
                 //console.log(qerr,vals,fields)
-                if (vals == undefined || vals =="")
+                console.log("length:",vals.length);
+                
+
+                if (vals == undefined)
                     callback("error");
                 else
                     callback(vals);
+                
+                
+                
             });
         }
     });
@@ -70,6 +76,7 @@ function queryUID (UID,callback) {
     var res = SQLquery(sqlPriKey,[UID],function(data){
         console.log('data:' + JSON.stringify(data));
         console.log('data:' + data.length);
+
         if (data!="error"){
             callback(data.length);
         }
@@ -89,7 +96,8 @@ function getEOSAccountName (UID,callback){
         if (data!= "error"){
             if (data.length == 0)
                 callback("error");
-            callback(data[0].accountName);
+            else
+                callback(data[0].accountName);
         }
         else{
             callback("error");
@@ -126,9 +134,11 @@ function getEOSPri(UID,callback){
     */
     SQLquery(sql,[UID],function(data){
         console.log('data:' + data);
-        if (data!= ""){
-
-            callback(data[0].activePriKey);
+        if (data!= "error"){
+            if (data.length == 0)
+                callback("error");
+            else
+                callback(data[0].activePriKey);
         }
         else
         {
