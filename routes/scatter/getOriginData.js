@@ -14,10 +14,14 @@ router.post('/', function(req, resp, next) {
 
 	//var EosRamAmount = utils.amountConvert(RamAmount);
 	var eos = Eos({
-        httpEndpoint:'https://api.eosnewyork.io',
+        httpEndpoint:'http://api.eosbeijing.one',
         chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
     });
 	console.log(data);
+	if (typeof data == "string"){
+		data = JSON.parse(data);
+		console.log(data,typeof(data));
+	}
 	
     eos.getAbi(data.actions[0].account)
 	.then(res => {
