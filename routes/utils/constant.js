@@ -4,11 +4,11 @@ ConstantInfo = {
 	    "jungle": 'e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473', // jungle testnet
 	},
 	"p2pServer" :{
-	    "main": 'https://api.eosnewyork.io', // main network
+	    "main": 'https://mainnet.eoscanada.com', // main network
 	    "jungle": 'http://jungle2.cryptolions.io:80' // jungle testnet
 	},
 	"superAccount" :{
-		"main": "tygavingavin",
+		"main": "gtygavintest",
 		"jungle":"tygavingavin",
 		"other": "eostesttest1"
 	}

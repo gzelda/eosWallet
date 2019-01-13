@@ -21,6 +21,12 @@ var identityFromPermissions = require('./routes/scatter/identityFromPermissions'
 var requestSignature = require('./routes/scatter/requestSignature');
 var getOriginData = require('./routes/scatter/getOriginData');
 
+var trxCPU = require('./routes/eosbank/trxCPU');
+var trxNET = require('./routes/eosbank/trxNET');
+
+var allocateWallet = require('./routes/wallet/allocateWallet');
+var createWallet = require('./routes/wallet/createWallet');
+
 var app = express();
 console.log("in app.js: initialize");
 // view engine setup
@@ -44,6 +50,12 @@ app.use('/eos/scatter/getOrRequestIdentity', getOrRequestIdentity);
 app.use('/eos/scatter/identityFromPermissions', identityFromPermissions);
 app.use('/eos/scatter/requestSignature', requestSignature);
 app.use('/eos/scatter/getOriginData', getOriginData);
+
+app.use('/eos/eosbank/trxCPU', trxCPU);
+app.use('/eos/eosbank/trxNET', trxNET);
+
+app.use('/eos/wallet/allocateWallet',allocateWallet);
+app.use('/eos/wallet/createWallet',createWallet);
 
 app.use('/eos/abd/delegate', delegate);
 app.use('/', indexRouter);

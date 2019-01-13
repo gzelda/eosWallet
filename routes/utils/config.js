@@ -1,8 +1,8 @@
 var constant = require('./constant.js');
 
-var chainServer = constant.ConstantInfo.p2pServer.jungle;
-var chainID = constant.ConstantInfo.chain.jungle;
-var superAccount = constant.ConstantInfo.superAccount.jungle;
+var chainServer = constant.ConstantInfo.p2pServer.main;
+var chainID = constant.ConstantInfo.chain.main;
+var superAccount = constant.ConstantInfo.superAccount.main;
 
 
 

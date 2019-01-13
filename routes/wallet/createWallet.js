@@ -1,18 +1,16 @@
 var express = require('express');
-var router = express.Router();
-var Eos = require('eosjs');
-var ecc = require('eosjs-ecc');
-var bodyParser = require('body-parser');
-var config = require('./utils/config.js');
-var db = require('./utils/db.js');
-var respJson = require('./utils/responseJson.js');
 var eosApi = require('eosjs-api');
-var utils = require('./utils/utils.js');
-
-/* GET home page. */
+var Eos = require('eosjs');
+var router = express.Router();
+var bodyParser = require('body-parser');
+var config = require('../utils/config.js');
+var db = require('../utils/db.js');
+var respJson = require('../utils/responseJson.js');
+var utils = require('../utils/utils.js');
+var ecc = require('eosjs-ecc');
+var config = require('../utils/config.js');
 
 function newAccountName(callback){
-    console.log(config.chainServer,config.chainID,config.superAccount);
     var options = {
       httpEndpoint: config.chainServer, // default, null for cold-storage
       verbose: false, // API logging
@@ -42,27 +40,22 @@ function newAccountName(callback){
 
 
 router.post('/', function(req, resp, next) {
-	
-    var UID = req.body.UID;
-    db.queryUID(UID,function(data){
-        console.log(data);
-        if (data == 0){
-            //此UID并无账户对应，可以创建
-            db.getRow("SuperUID",function(data){
+	var Num = req.body.Num;
+	(function iterator(i){
+     	db.getRow("SuperUID",function(data){
                 console.log(data);
                 var SuperPriKey = data.ownerPriKey;
-                console.log("chaindID:",config.chainID);
                 var eos = Eos({
                 //payer的私钥
                     keyProvider: SuperPriKey,// private key
                     httpEndpoint: config.chainServer,
                     chainId: config.chainID
                 });
-                var payer = config.superAccount;
+                var payer = data.accountName;
                 var newUserName = newAccountName(function(name){
                     console.log(name);
                     var newUserName = name;
-                    var respData = {accountName:newUserName};
+                    //var respData = {accountName:newUserName};
                     
                     ecc.randomKey().then(privateKey => {
                     //随机私钥
@@ -90,43 +83,48 @@ router.post('/', function(req, resp, next) {
                         tr.delegatebw({
                             from: payer,
                             receiver: newUserName,
-                            stake_net_quantity: '0.1000 EOS',
-                            stake_cpu_quantity: '0.1000 EOS',
+                            stake_net_quantity: '0.2000 EOS',
+                            stake_cpu_quantity: '0.2000 EOS',
                             transfer: 0
                         });
 
                     }).then(r => {
                             //链上创建用户成功，数据库存储
-                            console.log("result:"+r);
-                            db.InsertEOSKey(UID,newUserName,privateKey,newUserName,1,function(data){
-                                if (data !="error"){
-                                    resp.send(respJson.generateJson(1,0,"创建成功",respData));
-                                }
-                                else
-                                    resp.send(respJson.generateJson(0,0,"写库失败"));
-                            })
+	                            console.log("result:"+r);
+	                            
+	                            db.InsertEOSWallet(newUserName,privateKey,newUserName,0,function(data){
+	                                if (data !="error"){
+	                                	if (i < Num)
+	                                		iterator(i+1);
+	                                	else{
+	                                		var respData = {"status":0,"amount":i};
+                               				resp.send(respJson.generateJson(1,0,"全部成功",respData));
+	                                	}
+	                                    //resp.send(respJson.generateJson(1,0,"创建成功",respData));
+	                                }
+	                                else{
+	                                	var respData = {"status":1,"amount":i};
+                                		resp.send(respJson.generateJson(0,0,"部分成功，数据库返回结果错误，写库失败，需要手动查询",respData));
+	                                	return;
+	                                }
+	                                    //resp.send(respJson.generateJson(0,0,"写库失败"));
+	                            })
+	                            
                             
                             }).catch(e => {
                                 //返回失败结果
                                 console.log("err:"+e);
-                                resp.send(respJson.generateJson(0,0,"区块链用户名已经存在"));
+                                var respData = {"status":1,"amount":i};
+                                resp.send(respJson.generateJson(0,0,"部分成功，区块链返回结果错误，请关注超级账户余额 内存 及CPU百分比",respData));
+                                return;
+                                
+                                //resp.send(respJson.generateJson(0,0,"区块链用户名已经存在"));
                             });
                     })
                     
                 });
-
-                
-            })
-        }
-        else{
-            //此UID已经有账户对应，无需创建
-            resp.send(respJson.generateJson(0,0,"此UID已经有EOS账户对应，无需创建"));
-        }
-    })
-    /*
-    
-    */
-
+        })
+    })(1);
 });
 
 module.exports = router;
