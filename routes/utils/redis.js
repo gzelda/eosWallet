@@ -48,11 +48,31 @@ function setValue(key,value,callback){
             
     });
 }
-/*
-setValue("restWallet",19,function(data){
-    console.log(data);
+
+function initialize(){
+    setValue("cpuSystem",0.02,function(data){
+        console.log(data);
+    })
+    setValue("cpuUser",0.02,function(data){
+        console.log(data);
+    })
+    setValue("ramBytes",4096,function(data){
+        console.log(data);
+    })
+    setValue("netAmount",0.02,function(data){
+        console.log(data);
+    })
+    setValue("cpuAmount",0.02,function(data){
+        console.log(data);
+    })
+    setValue("restWallet",20,function(data){
+        console.log(data);
 })
+}
+/*
+initialize();
 */
+
 
 module.exports = {
     getValue,

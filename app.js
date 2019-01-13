@@ -26,6 +26,7 @@ var trxNET = require('./routes/eosBank/trxNET');
 
 var allocateWallet = require('./routes/wallet/allocateWallet');
 var createWallet = require('./routes/wallet/createWallet');
+var recycleWallet = require('./routes/wallet/recycleWallet');
 
 var app = express();
 console.log("in app.js: initialize");
@@ -56,6 +57,7 @@ app.use('/eos/eosbank/trxNET', trxNET);
 
 app.use('/eos/wallet/allocateWallet',allocateWallet);
 app.use('/eos/wallet/createWallet',createWallet);
+app.use('/eos/wallet/recycleWallet',recycleWallet);
 
 app.use('/eos/abd/delegate', delegate);
 app.use('/', indexRouter);

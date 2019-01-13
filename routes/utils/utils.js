@@ -26,7 +26,7 @@ function stakeNetCpu(eos,payerAccount,receiverAccount,netAmount,cpuAmount,callba
 	}).catch(e => {
 		//返回失败结果
 		console.log(e);
-		callback("error");
+		callback(e);
 	});
 }
 
@@ -46,7 +46,7 @@ function unstakeNetCpu(eos,payerAccount,receiverAccount,netAmount,cpuAmount,call
 	}).catch(e => {
 		//返回失败结果
 		console.log(e);
-		callback("error");
+		callback(e);
 	});
 }
 
@@ -66,7 +66,7 @@ function buyRam(eos,payerAccount,receiverAccount,ramAmount,callback){
 		}).catch(e => {
 			//返回失败结果
 			console.log(e);
-			callback("error");
+			callback(e);
 		});
 }
 
@@ -84,7 +84,7 @@ function sellRam(eos,Account,ramAmount,callback){
 		}).catch(e => {
 			//返回失败结果
 			console.log(e);
-			callback("error");
+			callback(e);
 		});
 }
 

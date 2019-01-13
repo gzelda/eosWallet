@@ -28,8 +28,6 @@ function SQLquery(sql,param,callback){
                 //事件驱动回调
                 //console.log(qerr,vals,fields)
                 
-                
-
                 if (vals == undefined)
                     callback("error");
                 else{
@@ -63,7 +61,7 @@ function InsertEOSKey (UID,accountName,priKey,accountName,status,callback) {
     var res = SQLquery(sqlPriKey,[ UID,priKey,priKey,accountName,status],function(data){
         console.log('data:' + data);
         if (data!="error"){
-            callback("ok"); 
+            callback(data); 
         }
         else{
             callback("error");  
@@ -78,7 +76,7 @@ function InsertEOSWallet (accountName,priKey,accountName,status,callback) {
     var res = SQLquery(sqlPriKey,[ priKey,priKey,accountName,status],function(data){
         console.log('data:' + data);
         if (data!="error"){
-            callback("ok"); 
+            callback(data); 
         }
         else{
             callback("error");  
@@ -87,13 +85,28 @@ function InsertEOSWallet (accountName,priKey,accountName,status,callback) {
     });
 }
 
-//更新
-function updateEOSWallet (UID,callback) {
+//分配
+function allocateEOSWallet (UID,callback) {
     var sql = 'UPDATE EOSPriKeyWarehouse INNER JOIN(SELECT * from EOSPriKeyWarehouse where ISNULL(UID) LIMIT 1) a SET EOSPriKeyWarehouse.UID = ?,EOSPriKeyWarehouse.status = 1 WHERE EOSPriKeyWarehouse.accountName = a.accountName;';   
     var res = SQLquery(sql,[UID],function(data){
         console.log('data:' + data);
         if (data!="error"){
-            callback("ok"); 
+            callback(data); 
+        }
+        else{
+            callback("error");  
+        }
+        
+    });
+}
+
+//回收
+function recycleEOSWallet (UID,callback) {
+    var sql = 'UPDATE EOSPriKeyWarehouse SET UID = null,status = 0 WHERE UID = ?;';   
+    var res = SQLquery(sql,[UID],function(data){
+        console.log('data:' + data);
+        if (data!="error"){
+            callback(data); 
         }
         else{
             callback("error");  
@@ -111,7 +124,10 @@ function queryUID (UID,callback) {
         console.log('data:' + data.length);
 
         if (data!="error"){
-            callback(data.length);
+            if (data.length == 0)
+                callback("void");
+            else
+                callback(data[0]);
         }
         else{
             callback("error");  
@@ -128,7 +144,7 @@ function getEOSAccountName (UID,callback){
         
         if (data!= "error"){
             if (data.length == 0)
-                callback("error");
+                callback("void");
             else
                 callback(data[0].accountName);
         }
@@ -136,40 +152,16 @@ function getEOSAccountName (UID,callback){
             callback("error");
         }       
     })
-    /*
-    connection.query(sql, [UID], function (error, result) {
-        if (error) {
-            console.log(error);
-            throw error;
-        }
-        else{
-            console.log('sql:' + result[0].ETHAddress);
-            //console.log(UID + 'gtygtygty(((((((((('+JSON.stringfy(result))
-            //result;
-            callback(result[0].ETHAddress);
-        }
-        
-    });
-
-    connection.end();
-    */
 }
 
 //获取priKey
 function getEOSPri(UID,callback){
     var sql = 'SELECT activePriKey FROM EOSPriKeyWarehouse WHERE UID = ?';
-    /*
-    connection.query(sql, [UID], function (error, result) {
-        if (error) throw error;
-        console.log('sql:' + result);
-        callback(result[0].priKey);
-    });
-    */
     SQLquery(sql,[UID],function(data){
         console.log('data:' + data);
         if (data!= "error"){
             if (data.length == 0)
-                callback("error");
+                callback("void");
             else
                 callback(data[0].activePriKey);
         }
@@ -184,18 +176,11 @@ function getEOSPri(UID,callback){
 //获取priKey
 function getRow(UID,callback){
     var sql = 'SELECT * FROM EOSPriKeyWarehouse WHERE UID = ?';
-    /*
-    connection.query(sql, [UID], function (error, result) {
-        if (error) throw error;
-        console.log('sql:' + result);
-        callback(result[0].priKey);
-    });
-    */
     SQLquery(sql,[UID],function(data){
         console.log('data:' + data);
         if (data!= "error"){
             if (data.length == 0)
-                callback("error");
+                callback("void");
             else
                 {   
                     console.log(data[0]);
@@ -217,7 +202,8 @@ module.exports = {
      getEOSAccountName,
      InsertEOSKey,
      InsertEOSWallet,
-     updateEOSWallet,
+     allocateEOSWallet,
+     recycleEOSWallet,
      queryUID,
      getRow
 }

@@ -15,66 +15,56 @@ router.post('/', function(req, resp, next) {
 
 
 	//var EosRamAmount = utils.amountConvert(RamAmount);
+	db.getRow(UID,function(data){
+		switch(data)
+		{
+		    case "void":
+		    	resp.send(respJson.generateJson(0,0,"此UID无EOS钱包"));
+		        break;
+		    case "error":
+		    	resp.send(respJson.generateJson(0,1,"数据库读库失败"));
+		        break;
+		    default:
+		    	console.log(data);
+		        var priKey = data.ownerPriKey;
+		        var eos = Eos({
+		        //payer的私钥
+		            keyProvider: priKey,// private key
+		            httpEndpoint: config.chainServer,
+		            chainId: config.chainID
+		        });
+	        	var payerAccount = data.accountName;
+	        	var receiverAccount = data.accountName;
 
+				switch(actionType)
+				{
+				    case 0:
+				    	utils.buyRam(eos,payerAccount,receiverAccount,EosRamAmount,function(data){
+			        		console.log(data);
+			        		if (data=="ok"){
+			        			resp.send(respJson.generateJson(1,0,"购买成功",data));
+			        		}
+			        		else
+			        			resp.send(respJson.generateJson(0,2,"购买失败"));
+			        	})
+				        break;
+				    case 1:
+				    	utils.sellRam(eos,payerAccount,EosRamAmount,function(data){
+			        		console.log(data);
+			        		if (data=="ok"){
+			        			resp.send(respJson.generateJson(1,1,"售卖成功",data));
+			        		}
+			        		else
+			        			resp.send(respJson.generateJson(0,3,"售卖失败"));
+			        	})
+				        break;
+				    default:
+				    	resp.send(respJson.generateJson(0,4,"actionType错误"));
+				}	        		
+		}
 
-	db.getEOSPri(UID,function(data){
-		console.log(data);
-        var priKey = data;
-        var eos = Eos({
-        //payer的私钥
-            keyProvider: priKey,// private key
-            httpEndpoint: config.chainServer,
-            chainId: config.chainID
-        });
+	})	
 
-        db.getEOSAccountName(UID,function(data){
-        	console.log(data);
-        	var payerAccount = data;
-        	var receiverAccount = data;
-        	if (actionType == 0){
-        		utils.buyRam(eos,payerAccount,receiverAccount,EosRamAmount,function(data){
-	        		console.log(data);
-	        		if (data!="error"){
-	        			resp.send(respJson.generateJson(1,0,"购买成功",data));
-	        		}
-	        		else
-	        			resp.send(respJson.generateJson(0,0,"购买失败"));
-	        	})
-        	}
-        	else if (actionType == 1){
-        		utils.sellRam(eos,payerAccount,EosRamAmount,function(data){
-	        		console.log(data);
-	        		if (data!="error"){
-	        			resp.send(respJson.generateJson(1,0,"售卖成功",data));
-	        		}
-	        		else
-	        			resp.send(respJson.generateJson(0,0,"售卖失败"));
-	        	})
-        	}
-        	else
-        		resp.send(respJson.generateJson(0,0,"actionType错误"));
-        	
-        })
-        
-
-	})
-	/*
-	//payer用户名
-	var payerAccount = "tygavingavin";
-	//被质押的用户名
-	var receiverAccount = "eostesttest1";
-	// 5HvJKiTh47yNbPHrtc7AqZk27jZpeM2TNmRvgnGRrNgnELJNvnm eostesttest1的私钥
-	// EOS8K3QgUHshaTBFS6xGoKEgLzj39CYXHMV2oxaRZMnn7qwr7uWWA eostesttest1的公钥
-
-	//通过网络协议来确定应该执行哪个
-	var ramAmount = 4096;
-	var netAmount = '1.0000 EOS';
-	var cpuAmount = '1.0000 EOS';
-	stakeCpu(cpuAmount);
-	*/
-
-	
-    
 	
 });
 

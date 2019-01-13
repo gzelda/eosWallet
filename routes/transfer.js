@@ -31,31 +31,58 @@ router.post('/', function(req, resp, next) {
 	var eosAmount = utils.amountConvert(amount);
 	console.log(typeof(amount),eosAmount);
 	if (eosAmount == "error"){
-		resp.send(respJson.generateJson(0,0,"amount格式错误"))
+		resp.send(respJson.generateJson(0,3,"amount格式错误"))
 	}
 	else{
 		db.getRow(UID,function(data){
-			var priKey = data.ownerPriKey;
-			var eos = Eos({
-	        //payer的私钥
-	            keyProvider: priKey,// private key
-	            httpEndpoint: config.chainServer,
-	            chainId: config.chainID
-	        });
-			//console.log(amount.toFixed(4) + " EOS");
-			
-	        eos.transaction(tr => {
-				tr.transfer(fromAccount,toAccount,eosAmount,memo);
-			}).then(r => {
-					//返回成功结果
-					console.log(r);
-					resp.send(respJson.generateJson(1,0,"请求成功",r));
-				}).catch(e => {
-					//返回失败结果
-					console.log(e);
-					resp.send(respJson.generateJson(0,0,"请求失败",e));
-				});
-			
+			/*
+			switch(data)
+			{
+			    case "void":
+
+			        break;
+			    case "error":
+
+			        break;
+			    default:
+
+			}
+			*/
+			switch(data)
+			{
+			    case "void":
+			    	resp.send(respJson.generateJson(0,0,"此UID无EOS钱包"));
+			        break;
+			    case "error":
+			    	resp.send(respJson.generateJson(0,1,"数据库查表失败"));
+			        break;
+			    default:
+			    	if (data.accountName != fromAccount){
+						resp.send(respJson.generateJson(0,2,"UID对应的库中账户名不一致"));
+					}
+					else{
+						var priKey = data.ownerPriKey;
+						var eos = Eos({
+				        //payer的私钥
+				            keyProvider: priKey,// private key
+				            httpEndpoint: config.chainServer,
+				            chainId: config.chainID
+				        });
+						//console.log(amount.toFixed(4) + " EOS");
+						
+				        eos.transaction(tr => {
+							tr.transfer(fromAccount,toAccount,eosAmount,memo);
+						}).then(r => {
+								//返回成功结果
+								//console.log(r);
+								resp.send(respJson.generateJson(1,0,"请求成功",r));
+							}).catch(e => {
+								//返回失败结果
+								//console.log(e);
+								resp.send(respJson.generateJson(0,4,"链端服务器请求失败",e));
+							});
+					}
+			}
 		})
 	}
 	
