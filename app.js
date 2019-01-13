@@ -21,8 +21,8 @@ var identityFromPermissions = require('./routes/scatter/identityFromPermissions'
 var requestSignature = require('./routes/scatter/requestSignature');
 var getOriginData = require('./routes/scatter/getOriginData');
 
-var trxCPU = require('./routes/eosbank/trxCPU');
-var trxNET = require('./routes/eosbank/trxNET');
+var trxCPU = require('./routes/eosBank/trxCPU');
+var trxNET = require('./routes/eosBank/trxNET');
 
 var allocateWallet = require('./routes/wallet/allocateWallet');
 var createWallet = require('./routes/wallet/createWallet');
