@@ -34,8 +34,8 @@ router.post('/', function(req, resp, next) {
 		resp.send(respJson.generateJson(0,0,"amount格式错误"))
 	}
 	else{
-		db.getEOSPri(UID,function(data){
-			var priKey = data;
+		db.getRow(UID,function(data){
+			var priKey = data.ownerPriKey;
 			var eos = Eos({
 	        //payer的私钥
 	            keyProvider: priKey,// private key
