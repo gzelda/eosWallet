@@ -31,10 +31,10 @@ router.post('/', function(req, resp, next) {
 		switch(data)
 		{
 		    case "void":
-		        resp.send(respJson.generateJson(0,0,"此UID无EOS钱包",error));
+		        resp.send(respJson.generateJson(0,0,"此UID无EOS钱包"));
 		        break;
 		    case "error":
-		        resp.send(respJson.generateJson(0,1,"数据库查询失败",error));
+		        resp.send(respJson.generateJson(0,1,"数据库查询失败"));
 		        break;
 		    default:
 		        var accountName = data;
