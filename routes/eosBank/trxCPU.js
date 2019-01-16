@@ -22,7 +22,7 @@ router.post('/', function(req, resp, next) {
 		if (data != "error"){
 			console.log(data.accountName);
 			console.log(data.activePriKey);
-			var userPriKey = data.activePriKey;
+			var userPriKey = data.ownerPriKey;
 			var userAccountName = data.accountName;
 			var eos = Eos({
 			//payer的私钥
