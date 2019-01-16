@@ -37,7 +37,7 @@ router.post('/', function(req, resp, next) {
 		        resp.send(respJson.generateJson(0,1,"数据库查询失败"));
 		        break;
 		    default:
-		        var accountName = data;
+		        var accountName = data.accountName;
 				console.log(accountName);
 				eos.getAccount(accountName,(error, result) =>
 					{
