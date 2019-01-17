@@ -62,6 +62,7 @@ router.post('/', function(req, resp, next) {
 					}
 					else{
 						var priKey = data.ownerPriKey;
+						console.log(priKey);
 						var eos = Eos({
 				        //payer的私钥
 				            keyProvider: priKey,// private key
@@ -69,7 +70,7 @@ router.post('/', function(req, resp, next) {
 				            chainId: config.chainID
 				        });
 						//console.log(amount.toFixed(4) + " EOS");
-						
+						console.log(fromAccount,toAccount,eosAmount,memo);
 				        eos.transaction(tr => {
 							tr.transfer(fromAccount,toAccount,eosAmount,memo);
 						}).then(r => {

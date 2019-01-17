@@ -1,5 +1,4 @@
 var express = require('express');
-var eosApi = require('eosjs-api');
 var Eos = require('eosjs');
 var router = express.Router();
 var bodyParser = require('body-parser');
@@ -7,7 +6,6 @@ var config = require('../utils/config.js');
 var db = require('../utils/db.js');
 var respJson = require('../utils/responseJson.js');
 var utils = require('../utils/utils.js');
-var ecc = require('eosjs-ecc');
 /* GET home page. */
 
 
@@ -29,24 +27,22 @@ router.post('/', function(req, resp, next) {
 				resp.send(respJson.generateJson(0,0,"读库失败"));
 		        break;
 		    default:
-		    	console.log(data.accountName);
-				console.log(data.activePriKey);
-				var userPriKey = data.ownerPriKey;
+				var priKey = data.ownerPriKey;
+				console.log(priKey);
 				var userAccountName = data.accountName;
+				console.log(priKey);
 				var eos = Eos({
 				//payer的私钥
-				    keyProvider: userPriKey,// private key
+				    keyProvider: priKey,// private key
 				    httpEndpoint: config.chainServer,
-				    //http://api.eosbeijing.one
-				    chainId: config.chainId
+				    chainId: config.chainID
 				});
-
-
 				var fromAccount = userAccountName;
 				var toAccount = "cpubankeosio";
 				//读redis TODO
 				var eosAmount = "0.0200 EOS";
 				var memo = "1d " + fromAccount +" cpu";
+				console.log(fromAccount,toAccount,eosAmount,memo);
 					//console.log(amount.toFixed(4) + " EOS");
 				console.log("in");
 			    eos.transaction(tr => {
