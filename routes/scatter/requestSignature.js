@@ -32,8 +32,14 @@ router.post('/', function(req, resp, next) {
 	        	    "result":{
 	                    "signatures":[signature],
                         "returnedFields":{}
-	                }
+	                },
+	                cpuData:{
+		                systemRestTimes: 1,
+		                status: 1,  // 1.cpu充足 2.cpu不充足，系统剩余次数足够，系统已经帮你质押了一次 3.cpu不充足，系统剩余次数不足，请求用户自己花钱质押
+		                amount: 0.02  // "0.02 EOS" 质押消耗的eos数量 （运营常量）
+		            }
             	};
+
     resp.send(respJson.generateJson(1,0,"请求成功",result));
 
 	//var EosRamAmount = utils.amountConvert(RamAmount);
