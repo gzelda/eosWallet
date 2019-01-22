@@ -6,6 +6,7 @@ var config = require('../utils/config.js');
 var db = require('../utils/db.js');
 var respJson = require('../utils/responseJson.js');
 var utils = require('../utils/utils.js')
+var ecc = require('eosjs-ecc');
 
 /* GET home page. */
 router.post('/', function(req, resp, next) {
