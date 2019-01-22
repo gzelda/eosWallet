@@ -14,7 +14,7 @@ router.post('/', function(req, resp, next) {
 
 	//var EosRamAmount = utils.amountConvert(RamAmount);
 	var eos = Eos({
-        httpEndpoint:'http://api.eosbeijing.one',
+        httpEndpoint:'https://mainnet.eoscanada.com',
         chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
     });
 	console.log(data);
@@ -36,10 +36,7 @@ router.post('/', function(req, resp, next) {
 	}).catch(e=>{
 		resp.send(respJson.generateJson(0,0,"请求失败"));
 	    console.log(e);
-	})
-	
-
-	
+	})	
 });
 
 module.exports = router;

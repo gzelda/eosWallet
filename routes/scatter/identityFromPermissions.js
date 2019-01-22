@@ -11,10 +11,25 @@ var utils = require('../utils/utils.js')
 router.post('/', function(req, resp, next) {
 	var UID = req.body.UID;
 	//库表查
-	var name = "gtygavintest";
-	var publicKey = "EOS8ivzcSu6Co6hJXaTfPjGyXUX2jnrK5VKrsQ9DXhKcBPF9TZj8p";
+	var UID = req.body.UID;
+	//库表查
 	
-	var result = {
+	db.getRow(UID,function(data){
+    	switch(data)
+		{
+		    case "void":
+		    	resp.send(respJson.generateJson(0,0,"此用户名无EOS钱包"));
+		        break;
+		    case "error":
+		    	resp.send(respJson.generateJson(0,1,"查库失败"));
+		        break;
+		    default:
+		    	config.log(data.accountName);
+		    	config.log(data.ownerPriKey);
+
+		    	var publicKey = ecc.privateToPublic(data.ownerPriKey)
+		    	var name = data.accountName;
+		    	var result = {
 	        	    "result":{
 	                    "accounts":[
 	                        {
@@ -26,12 +41,9 @@ router.post('/', function(req, resp, next) {
 	                    ],
 	                }
             	};
-    resp.send(respJson.generateJson(1,0,"请求成功",result));
-
-	//var EosRamAmount = utils.amountConvert(RamAmount);
-
-
-	
+            	resp.send(respJson.generateJson(1,0,"请求成功",result));
+		}
+    });
 });
 
 module.exports = router;
