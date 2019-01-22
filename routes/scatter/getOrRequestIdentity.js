@@ -23,8 +23,8 @@ router.post('/', function(req, resp, next) {
 		    	resp.send(respJson.generateJson(0,1,"查库失败"));
 		        break;
 		    default:
-		    	config.log(data.accountName);
-		    	config.log(data.ownerPriKey);
+		    	console.log(data.accountName);
+		    	console.log(data.ownerPriKey);
 
 		    	var publicKey = ecc.privateToPublic(data.ownerPriKey)
 		    	var name = data.accountName;
