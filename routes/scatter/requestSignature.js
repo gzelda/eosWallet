@@ -155,11 +155,11 @@ router.post('/', function(req, resp, next) {
 						                },
 						                cpuData:{
 							                systemRestTimes: 1,
-							                status: 2,  // 1.cpu充足 2.cpu不充足，系统剩余次数足够，系统已经帮你质押了一次 3.cpu不充足，系统剩余次数不足，请求用户自己花钱质押
+							                status: 3,  // 1.cpu充足 2.cpu不充足，系统剩余次数足够，系统已经帮你质押了一次 3.cpu不充足，系统剩余次数不足，请求用户自己花钱质押
 							                amount: 0.02  // "0.02 EOS" 质押消耗的eos数量 （运营常量）
 							            }
 					            	};
-							    	resp.send(respJson.generateJson(1,2,"请求成功,cpu不足,系统赠送次数相同",result));
+							    	resp.send(respJson.generateJson(1,2,"请求成功,cpu不足,系统赠送次数不足,请自行质押",result));
 							    	break;
 							}
 						}

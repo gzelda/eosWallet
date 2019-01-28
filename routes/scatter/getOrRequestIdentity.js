@@ -11,6 +11,7 @@ var ecc = require('eosjs-ecc');
 /* GET home page. */
 router.post('/', function(req, resp, next) {
 	var UID = req.body.UID;
+	console.log(UID);
 	//库表查
 	
 	db.getRow(UID,function(data){
