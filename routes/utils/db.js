@@ -6,9 +6,9 @@ var pool = mysql.createPool({
     connectTimeout  : 60 * 60 * 1000,
     aquireTimeout   : 60 * 60 * 1000,
     timeout         : 60 * 60 * 1000,
-    host: 'nodeinstance.couot2aumoqo.us-east-2.rds.amazonaws.com',
+    host: 'keyinstance.ci2ntp4wej15.ap-southeast-1.rds.amazonaws.com',
     user: 'tygavingavin',
-    password: 'tygavinmysql',
+    password: 'gavinKeyWareHouse',
     database: 'KeyWarehouse'
 });
 

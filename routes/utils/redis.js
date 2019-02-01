@@ -4,9 +4,7 @@ var redis = require("redis"),
     RDS_PWD = 'tygavingavin',
     RDS_OPTS = {auth_pass:RDS_PWD},
     client = redis.createClient(RDS_PORT,RDS_HOST,RDS_OPTS);
-
-
-
+    
 client.on('error',function(error){
         console.log(error);
 });
