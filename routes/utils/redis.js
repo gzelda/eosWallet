@@ -1,6 +1,6 @@
 var redis = require("redis"),
     RDS_PORT = 6379,
-    RDS_HOST = '52.221.194.202',
+    RDS_HOST = '18.223.112.79',
     RDS_PWD = 'bgsgameRedis',
     RDS_OPTS = {auth_pass:RDS_PWD},
     client = redis.createClient(RDS_PORT,RDS_HOST,RDS_OPTS);
